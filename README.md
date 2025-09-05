@@ -49,11 +49,29 @@ python manage.py runserver
 6.Open the app in your browser:
 👉 http://127.0.0.1:8000/
 
+7.Deploy and get your live URL 🎉
+🚂 Deploy on Railway
+
+Install the Railway CLI
+ and login.
+
+Create a new project:
+railway init
+
+Add environment variables:
+railway variables set OPENWEATHER_API_KEY=your_api_key_here
+
+Deploy:
+railway up
+
+Get your hosted URL 🚀
+
+Get your hosted URL 🚀
 📁 Project Structure
 Django-Weather-App/
-├── weather_app/          # Main Django app
+├── weather/              # Main Django app
 │   ├── templates/
-│   │   └── weather.html
+│   │   └── weather/index.html
 │   ├── __init__.py
 │   ├── admin.py
 │   ├── apps.py
@@ -68,7 +86,8 @@ Django-Weather-App/
 │   ├── asgi.py
 │   └── wsgi.py
 ├── .env                  # Environment variables (not in version control)
-├── .gitignore           # Git ignore rules
-├── requirements.txt     # Python dependencies
-└── manage.py            # Django management script
+├── .gitignore            # Git ignore rules
+├── requirements.txt      # Python dependencies
+└── manage.py             # Django management script
+
 
