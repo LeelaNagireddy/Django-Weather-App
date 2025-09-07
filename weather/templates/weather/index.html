@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Weather App</title>
+    
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #e0f7fa;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .weather-card {
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-top: 40px;
+        }
+        .weather-icon {
+            width: 100px;
+            height: 100px;
+        }
+        .temp {
+            font-size: 36px;
+            font-weight: bold;
+        }
+        .info {
+            font-size: 18px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="text-center mt-5">🌤 Weather App</h1>
+    <form method="get" class="mt-4 text-center">
+        <input type="text" name="city" placeholder="Enter city name" class="form-control w-50 mx-auto" required>
+        <button type="submit" class="btn btn-primary mt-2">Get Weather</button>
+    </form>
+
+    {% if weather %}
+        <div class="weather-card mx-auto mt-4 w-50 text-center">
+            {% if weather.error %}
+                <p class="text-danger">{{ weather.error }}</p>
+            {% else %}
+                <img src="https://openweathermap.org/img/wn/{{ weather.icon }}@4x.png"
+                     alt="Weather Icon"
+                     class="weather-icon">
+                <h2 class="mt-2">{{ weather.city }}</h2>
+                <p class="temp">{{ weather.temperature }} °C</p>
+                <p class="info">Humidity: {{ weather.humidity }}%</p>
+                <p class="info">Pressure: {{ weather.pressure }} hPa</p>
+                <p class="info text-capitalize">Description: {{ weather.description }}</p>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+</body>
+</html>
