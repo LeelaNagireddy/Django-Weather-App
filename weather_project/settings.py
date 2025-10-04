@@ -3,23 +3,29 @@ Django settings for weather_project project.
 """
 
 from pathlib import Path
-from decouple import config  # ✅ import for .env
+from decouple import config
+import dj_database_url
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# ------------------------------------------------------------
+# 🔐 Security and Environment
+# ------------------------------------------------------------
+SECRET_KEY = config('SECRET_KEY', default='unsafe-secret-key')
 
-# Quick-start development settings - unsuitable for production
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY', default='unsafe-secret-key')  # ✅ use .env
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,.onrender.com', cast=lambda v: v.split(','))
+ALLOWED_HOSTS = config(
+    'ALLOWED_HOSTS',
+    default='localhost,127.0.0.1,.onrender.com',
+    cast=lambda v: [h.strip() for h in v.split(',')]
+)
 
-
-# Application definition
+# ------------------------------------------------------------
+# 🔧 Application Definition
+# ------------------------------------------------------------
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -32,6 +38,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # ✅ serve static files on Render
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -59,8 +66,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'weather_project.wsgi.application'
 
-
-# Database
+# ------------------------------------------------------------
+# 💾 Database
+# ------------------------------------------------------------
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -68,8 +76,14 @@ DATABASES = {
     }
 }
 
+# ✅ Allow Render (or others) to override with DATABASE_URL
+DATABASES['default'] = dj_database_url.config(
+    default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}"
+)
 
-# Password validation
+# ------------------------------------------------------------
+# 🔒 Password Validation
+# ------------------------------------------------------------
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
@@ -77,21 +91,30 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
 ]
 
-
-# Internationalization
+# ------------------------------------------------------------
+# 🌍 Internationalization
+# ------------------------------------------------------------
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
+# ------------------------------------------------------------
+# 🗂️ Static Files (CSS, JS, Images)
+# ------------------------------------------------------------
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Static files
-STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'static'
+# ✅ Whitenoise settings for compressed static delivery
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+# ------------------------------------------------------------
+# 🧩 Default Auto Field
+# ------------------------------------------------------------
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-# OpenWeatherMap API Key
+# ------------------------------------------------------------
+# 🌦️ Weather API Key
+# ------------------------------------------------------------
 OPENWEATHER_API_KEY = config('OPENWEATHER_API_KEY', default='')
 
