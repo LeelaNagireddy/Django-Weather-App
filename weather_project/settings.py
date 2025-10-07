@@ -22,7 +22,9 @@ ALLOWED_HOSTS = config(
     default='localhost,127.0.0.1,.onrender.com',
     cast=lambda v: [h.strip() for h in v.split(',')]
 )
-
+CSRF_TRUSTED_ORIGINS = [
+    'https://django-weather-app-yh0f.onrender.com',
+]
 # ------------------------------------------------------------
 # 🔧 Application Definition
 # ------------------------------------------------------------
@@ -117,4 +119,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # 🌦️ Weather API Key
 # ------------------------------------------------------------
 OPENWEATHER_API_KEY = config('OPENWEATHER_API_KEY', default='')
+
 
